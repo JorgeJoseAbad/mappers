@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ import { IEntity } from './mapper/iEntity';
     styleUrls: ['./app.component.css'],
     providers: [KeyValuePipe]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit{
 
     title = 'mappers';
     readEntities: Array<IReadEntity>;
@@ -25,7 +25,8 @@ export class AppComponent implements OnInit {
     entitiesOf$: Observable<Array<IEntity>>;
     entitiesFrom: Array<IEntity> = [];
 
-    @ViewChild('btn', { static: true }) button: ElementRef;
+  @ViewChild('btn', { static: true })
+    myBoton: ElementRef; //cambio button por myBoton, nombre mas de propiedad
 
     public constructor(
       private _entityMapperService: EntityMapperService,
@@ -35,7 +36,11 @@ export class AppComponent implements OnInit {
     }
 
 
+    ngAfterViewInit(){
+      console.log('Values on ngAfterViewInit():');
+      console.log("Button is:", this.myBoton.nativeElement.click());
 
+    }
 
 
     ngOnInit(): void {
@@ -89,18 +94,19 @@ export class AppComponent implements OnInit {
     }
 
 
-    $dogsBreed(): Observable<any>{
-       return this.dogsService.getDogs()
-     }
+
+  $dogsBreed(): Observable<any>{
+     return this.dogsService.getDogs()
+   }
 
   getDogsBreed() {
-    console.log("Hola estoy en getDogsBreed")
     this.$dogsBreed()
       .pipe(map(data => {
+        console.log(data)
         var dogs = this.keyValuePipe.transform(data.message)
         console.log(dogs)
       }))
-      .subscribe(data=>console.log(data));
+     .subscribe();
 
   }
 
