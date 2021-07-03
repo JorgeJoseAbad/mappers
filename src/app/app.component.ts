@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit{
 
     ngAfterViewInit(){
       console.log('Values on ngAfterViewInit():');
-      console.log("Button is:", this.myBoton.nativeElement.click());
+      console.log("Button is:", this.myBoton.nativeElement.click()); //native method
 
     }
 
