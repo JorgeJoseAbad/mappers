@@ -6,11 +6,11 @@ import { IEntity } from './iEntity';
 @Injectable()
 export class EntityMapperService extends MapperService<IReadEntity, IEntity> {
 
-    protected map(entity: IReadEntity): IEntity {
+    protected myMap(entity: IReadEntity): IEntity {
         return {
             id: entity.id,
             name: entity.name,
-            country: '',
+            country: 'España',
             birthDate: new Date(entity.birthDate)
         };
     }

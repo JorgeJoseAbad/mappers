@@ -4,13 +4,18 @@
     </h1>
     <img alt="Angular Frontenders" src="../assets/angular-frontenders.png">
 </div>
-<h2>Entity:</h2>
+<h1>Entities origen:</h1>
+<h2>Entity 1:</h2>
 {{ readEntities[0] | json }}
-<h2>Uses:</h2>
+<h2>Entity 2:</h2>
+{{ readEntities[1] | json }}
+<h1>Uses:</h1>
 <ul>
     <li>
-        <h2>Map one entity</h2>
+        <h2>Map one entity, la primera:</h2>
         {{ entity | json }}
+        <h2>Map one entity; la segunda</h2>
+        {{ entityDos | json }}
     </li>
     <li>
         <h2>Map array of entities</h2>
@@ -20,12 +25,13 @@
         <h2>Map array of entities Observable</h2>
         {{ entitiesOf$ | async | json }}
     </li>
-   
+
     <li>
         <h2>Map array from entities Observable</h2>
         <div *ngFor="let entity of entitiesFrom; trackBy:entityId">
             {{ entity | json }}
         </div>
-        
+
     </li>
 </ul>
+<button on-click="getDogsBreed()"   type="button" name="button">Buscar perros</button>

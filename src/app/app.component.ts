@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { KeyValuePipe } from '@angular/common';
+import { DogsService } from './dogs.service';
 
 import { EntityMapperService } from './mapper/entityMapper.service';
 import { IReadEntity } from './mapper/iReadEntity';
@@ -9,19 +12,31 @@ import { IEntity } from './mapper/iEntity';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.css'],
+    providers: [KeyValuePipe]
 })
 export class AppComponent implements OnInit {
 
     title = 'mappers';
     readEntities: Array<IReadEntity>;
     entity: IEntity;
+    entityDos: IEntity;
     entities: Array<IEntity>;
     entitiesOf$: Observable<Array<IEntity>>;
     entitiesFrom: Array<IEntity> = [];
 
-    public constructor(private _entityMapperService: EntityMapperService) {
+    @ViewChild('btn', { static: true }) button: ElementRef;
+
+    public constructor(
+      private _entityMapperService: EntityMapperService,
+      private dogsService : DogsService,
+      private keyValuePipe : KeyValuePipe
+    ) {
     }
+
+
+
+
 
     ngOnInit(): void {
         // Map entity
@@ -43,6 +58,7 @@ export class AppComponent implements OnInit {
         ];
 
         this.entity = this._entityMapperService.transform(this.readEntities[0]);
+        this.entityDos = this._entityMapperService.transform(this.readEntities[1]);
 
         // Map array of entities
         this.entities = this._entityMapperService.transform(this.readEntities);
@@ -52,14 +68,15 @@ export class AppComponent implements OnInit {
         const readEntitiesOf$: Observable<Array<IReadEntity>> = of(this.readEntities);
         this.entitiesOf$ = readEntitiesOf$
         .pipe(
-            map(
+          map(
             (readEntity: Array<IReadEntity>) =>
                 this._entityMapperService.transform(readEntity)
             ));
 
         // from
         const arrayReadEntitiesFrom$: Observable<IReadEntity> = from(this.readEntities);
-        arrayReadEntitiesFrom$.pipe(map((readEntity: IReadEntity) =>
+        arrayReadEntitiesFrom$
+        .pipe(map((readEntity: IReadEntity) =>
             this._entityMapperService.transform(readEntity)
         ))
         .subscribe((value: IEntity) =>
@@ -70,5 +87,21 @@ export class AppComponent implements OnInit {
     public entityId(index: number, entity: IEntity): string {
         return entity.id;
     }
+
+
+    $dogsBreed(): Observable<any>{
+       return this.dogsService.getDogs()
+     }
+
+  getDogsBreed() {
+    console.log("Hola estoy en getDogsBreed")
+    this.$dogsBreed()
+      .pipe(map(data => {
+        var dogs = this.keyValuePipe.transform(data.message)
+        console.log(dogs)
+      }))
+      .subscribe(data=>console.log(data));
+
+  }
 
 }
